@@ -30,6 +30,10 @@
       box-shadow:0 6px 30px rgba(3,6,12,0.6);
       overflow:visible;
       will-change:transform,filter,opacity;
+      /* initial hidden state for fade-in */
+      opacity:0;
+      transform:translate(-50%,-46%) scale(.985);
+      animation:profileFadeIn 900ms cubic-bezier(.2,.9,.28,1) 320ms forwards;
     }
     .profile-card::before{
       content:"";
@@ -50,6 +54,30 @@
       box-shadow:0 8px 30px rgba(0,0,0,0.6), inset 0 0 0 10px rgba(16,22,30,0.6);
       border:4px solid rgba(255,255,255,0.04);
       background:linear-gradient(180deg,#141416,#1b1d21);
+    }
+    /* child staggered reveal */
+    .profile-card .avatar,
+    .profile-card .name,
+    .profile-card .meta,
+    .profile-card .icons{
+      opacity:0;
+      transform:translateY(10px) scale(.995);
+      animation:childFade .58s cubic-bezier(.2,.9,.28,1) 540ms forwards;
+    }
+    .profile-card .avatar{animation-delay:520ms}
+    .profile-card .name{animation-delay:620ms}
+    .profile-card .meta{animation-delay:700ms}
+    .profile-card .icons{animation-delay:760ms}
+
+    @keyframes profileFadeIn{
+      0%{opacity:0;transform:translate(-50%,-46%) scale(.985);filter:blur(8px) saturate(90%)}
+      60%{opacity:1;transform:translate(-50%,-49%) scale(.995);filter:blur(3px) saturate(100%)}
+      100%{opacity:1;transform:translate(-50%,-50%) scale(1);filter:blur(0) saturate(120%)}
+    }
+
+    @keyframes childFade{
+      0%{opacity:0;transform:translateY(10px) scale(.995);filter:blur(6px)}
+      100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
     }
     .profile-card .avatar img{width:100%;height:100%;object-fit:cover;display:block}
     .profile-card .name{font-size:46px;font-weight:800;line-height:1;margin:0;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.35)}
@@ -103,34 +131,29 @@
     </div>
   </section>
 
-  <div class="ui">
-    <button id="unmuteBtn" class="btn">Activer le son</button>
-  </div>
-
   <script>
     (function(){
       const vid = document.getElementById('bgVid');
-      const btn = document.getElementById('unmuteBtn');
+      if (!vid) return;
 
-      function ensurePlaying() {
-        if (!vid) return;
-        vid.muted = true;
-        const p = vid.play();
-        if (p && typeof p.then === 'function') {
-          p.catch(() => { /* ignore */ });
-        }
-      }
-
-      btn.addEventListener('click', function(){
-        if (!vid) return;
+      // Attempt to play the video with sound immediately.
+      // Note: some browsers may block unmuted autoplay; in that case
+      // the play() promise will reject and the video will remain paused.
+      try {
         vid.muted = false;
         vid.volume = 0.85;
         const p = vid.play();
-        if (p && typeof p.then === 'function') p.catch(() => { /* ignore */ });
-        btn.style.display = 'none';
-      });
-
-      ensurePlaying();
+        if (p && typeof p.then === 'function') {
+          p.catch((err) => {
+            // Autoplay blocked — keep muted autoplay as a graceful fallback
+            vid.muted = true;
+            vid.volume = 0;
+            vid.play().catch(()=>{});
+          });
+        }
+      } catch (e) {
+        // ignore
+      }
     })();
   </script>
 </body>
