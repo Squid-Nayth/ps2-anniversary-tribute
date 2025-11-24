@@ -1,14 +1,16 @@
 # PS2 Anniversary Tribute
 
-![PS2 blocks](public/images/ps2 w_blocks.png)
+<p align="center">
+	<img src="public/images/ps2 w_blocks.png" alt="PS2 logo" width="" height="">
+</p>
 
 Ce dépôt contient un projet hommage à la PlayStation 2. L'objectif est de recréer l'ambiance visuelle et sonore du menu de la PS2.
 
 <p align="center">
-	<img src="public/favicon/logo-ps.png" alt="PS2 logo" width="96" height="96">
+	<img src="public/images/playstation_2_logo__2000_2006___drawing__by_danillothelogomaker_dixwc7d-fullview.jpg" alt="PS2 logo" width="" height="">
 </p>
 
-## Overview
+## Vue d'ensemble
 
 Ce projet est essentiellement front-end mais il utilise quelques outils pour la compilation des ressources avec Sass et Pug.
 
@@ -16,22 +18,20 @@ Ce projet est essentiellement front-end mais il utilise quelques outils pour la 
 
 La partie front-end est écrite en JavaScript vanilla sans framework front. Quelques bibliothèques peuvent être utilisées ponctuellement (ex. pour des animations), mais l'architecture favorise la simplicité en utilisant : 
 
-- Sass/Scss
-- Pug
+- [Sass/Scss](https://sass-lang.com/)
+- [Pug](https://pugjs.org/api/getting-started.html)
 - JavaScript
 
-## Getting Started
+## Pour commencer
 
 ### Prérequis
 
 - Node.js (optionnel si vous n'utilisez pas les scripts de build de Sass et de Pug).
-- Python (optionnel, pour tester rapidement le dossier `public` via `python3 -m http.server`) ou utiliser l'extension LiveServer sur VsCode.
 
 1. Cloner le dépôt :
 
 ```bash
 git clone https://github.com/Squid-Nayth/ps2-anniversary-tribute.git
-cd ps2-anniversary-tribute
 ```
 
 2. Installer Sass et Pug
@@ -58,14 +58,12 @@ Avec Node.js / serve :
 npx serve public -l 8000
 ```
 
-Ou utiliser l'extension LiveServer pour VsCode.
+Ou utiliser l'extension [LiveServer](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) pour VsCode.
 
 
-## Credits
+## Mentions légales
 
-Ce projet a été réalisé par Nathan Michel (2025) comme un hommage personnel à la PlayStation 2. Mon intention est de partager une base visuelle et sonore, explicative et modifiable.
-
-Inspirations et remerciements : projets open-source et tutoriels publics qui m'ont aidé durant l'apprentissage.
+Les effets visuels et sonores présentés sur ce site sont la propriété de Sony Interactive Entertainment. Ce projet est réalisé à des fins non commerciales et n’est en aucun cas affilié à Sony.
 
 ---
 
