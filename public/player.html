@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PS2 Player</title>
+  <style>
+    html,body{height:100%;margin:0;background:#000;color:#fff;display:flex;align-items:center;justify-content:center}
+    .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px)}
+    video{width:100%;height:auto;max-height:120px;display:block}
+  </style>
+</head>
+<body>
+  <video id="ambient" playsinline loop preload="auto" muted>
+    <source src="videos/PlayStation 2 System Menu Ambience for 2 hours (online-video-cutter.com).mp4" type="video/mp4">
+  </video>
+  <div class="visually-hidden" id="status">ready</div>
+
+  <script>
+    (function(){
+      const bcName = 'ps2-player';
+      let bc = null;
+      try { bc = new BroadcastChannel(bcName); } catch(e) { bc = null; }
+
+      const vid = document.getElementById('ambient');
+
+      function tryPlayAmbient(unmute){
+        if (!vid) return;
+        if (unmute) { vid.muted = false; vid.volume = 0.85; }
+        const p = vid.play();
+        if (p && typeof p.then === 'function') p.catch(()=>{});
+      }
+
+      // listen for messages
+      function handleMessage(msg) {
+        const {type, payload} = msg.data || {};
+        if (!type) return;
+        if (type === 'play-ambient') {
+          tryPlayAmbient(payload && payload.unmute);
+        } else if (type === 'pause-ambient') {
+          try { vid.pause(); } catch(e){}
+        } else if (type === 'play-sfx') {
+          const src = payload && payload.src;
+          const vol = (payload && typeof payload.volume === 'number') ? payload.volume : 1;
+          if (src) {
+            try {
+              const a = new Audio(src);
+              a.volume = vol;
+              a.play().catch(()=>{});
+            } catch(e) {}
+          }
+        }
+      }
+
+      // BroadcastChannel handler
+      if (bc) {
+        bc.onmessage = handleMessage;
+        // announce readiness so other windows know this player will handle SFX
+        try { bc.postMessage({type:'player-ready'}); } catch(e){}
+      }
+
+      // also accept postMessage from opener
+      window.addEventListener('message', function(ev){
+        try { handleMessage({data:ev.data}); } catch(e){}
+      }, false);
+
+      // autoplay muted by default; if opened by a user gesture the opener should ask to unmute
+      tryPlayAmbient(false);
+
+      // also announce readiness via postMessage to opener if possible
+      try {
+        if (window.opener && typeof window.opener.postMessage === 'function') {
+          window.opener.postMessage({type:'player-ready'}, location.origin);
+        }
+      } catch(e) {}
+
+      // expose a ping response to let opener know we're ready
+      window.addEventListener('message', (ev) => {
+        if (ev.data && ev.data.type === 'ping') {
+          ev.source.postMessage({type:'pong'}, ev.origin);
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>

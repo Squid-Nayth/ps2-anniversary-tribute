@@ -1,160 +1,699 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ambience — PlayStation 2</title>
-  <link href="css/style.css" rel="stylesheet" />
-  <style>
-    html,body{height:100%;margin:0;background:#000}
-    .bg-video{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
-    /* Profile card centered slightly to the right (glassmorphism + bloom) */
-    .profile-card{
-      position:fixed;
-      top:50%;
-      left:56%;
-      transform:translate(-50%,-50%);
-      z-index:4;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:16px;
-      color:#e6eef8;
-      text-align:center;
-      pointer-events:auto;
-      padding:20px 28px;
-      border-radius:14px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.06);
-      backdrop-filter:blur(8px) saturate(120%);
-      box-shadow:0 6px 30px rgba(3,6,12,0.6);
-      overflow:visible;
-      will-change:transform,filter,opacity;
-      /* initial hidden state for fade-in */
-      opacity:0;
-      transform:translate(-50%,-46%) scale(.985);
-      animation:profileFadeIn 900ms cubic-bezier(.2,.9,.28,1) 320ms forwards;
-    }
-    .profile-card::before{
-      content:"";
-      position:absolute;
-      inset:-18px;
-      z-index:-2;
-      border-radius:18px;
-      background:radial-gradient(circle at 30% 20%, rgba(255,90,60,0.10) 0%, rgba(255,90,60,0.02) 18%, transparent 35%), radial-gradient(circle at 70% 80%, rgba(80,140,255,0.08) 0%, rgba(80,140,255,0.02) 24%, transparent 42%);
-      filter:blur(28px) saturate(120%);
-      pointer-events:none;
-      opacity:0.95;
-    }
-    .profile-card .avatar{
-      width:180px;
-      height:180px;
-      border-radius:50%;
-      overflow:hidden;
-      box-shadow:0 8px 30px rgba(0,0,0,0.6), inset 0 0 0 10px rgba(16,22,30,0.6);
-      border:4px solid rgba(255,255,255,0.04);
-      background:linear-gradient(180deg,#141416,#1b1d21);
-    }
-    /* child staggered reveal */
-    .profile-card .avatar,
-    .profile-card .name,
-    .profile-card .meta,
-    .profile-card .icons{
-      opacity:0;
-      transform:translateY(10px) scale(.995);
-      animation:childFade .58s cubic-bezier(.2,.9,.28,1) 540ms forwards;
-    }
-    .profile-card .avatar{animation-delay:520ms}
-    .profile-card .name{animation-delay:620ms}
-    .profile-card .meta{animation-delay:700ms}
-    .profile-card .icons{animation-delay:760ms}
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ambience — PlayStation 2</title>
+    <link href="css/style.css" rel="stylesheet" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: #000;
+      }
+      .bg-video {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+      }
+      /* Profile card centered slightly to the right (glassmorphism + bloom) */
+      .profile-card {
+        position: fixed;
+        top: 50%;
+        left: 56%;
+        transform: translate(-50%, -50%);
+        z-index: 4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        color: #e6eef8;
+        text-align: center;
+        pointer-events: auto;
+        padding: 20px 28px;
+        border-radius: 14px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(8px) saturate(120%);
+        box-shadow: 0 6px 30px rgba(3, 6, 12, 0.6);
+        overflow: visible;
+        will-change: transform, filter, opacity;
+        /* initial hidden state for fade-in */
+        opacity: 0;
+        transform: translate(-50%, -46%) scale(0.985);
+        animation: profileFadeIn 900ms cubic-bezier(0.2, 0.9, 0.28, 1) 320ms
+          forwards;
+      }
+      .profile-card::before {
+        content: "";
+        position: absolute;
+        inset: -18px;
+        z-index: -2;
+        border-radius: 18px;
+        background: radial-gradient(
+            circle at 30% 20%,
+            rgba(255, 90, 60, 0.1) 0%,
+            rgba(255, 90, 60, 0.02) 18%,
+            transparent 35%
+          ),
+          radial-gradient(
+            circle at 70% 80%,
+            rgba(80, 140, 255, 0.08) 0%,
+            rgba(80, 140, 255, 0.02) 24%,
+            transparent 42%
+          );
+        filter: blur(28px) saturate(120%);
+        pointer-events: none;
+        opacity: 0.95;
+      }
+      .profile-card .avatar {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6),
+          inset 0 0 0 10px rgba(16, 22, 30, 0.6);
+        border: 4px solid rgba(255, 255, 255, 0.04);
+        background: linear-gradient(180deg, #141416, #1b1d21);
+      }
+      /* child staggered reveal */
+      .profile-card .avatar,
+      .profile-card .name,
+      .profile-card .meta,
+      .profile-card .icons {
+        opacity: 0;
+        transform: translateY(10px) scale(0.995);
+        animation: childFade 0.58s cubic-bezier(0.2, 0.9, 0.28, 1) 540ms
+          forwards;
+      }
+      .profile-card .avatar {
+        animation-delay: 520ms;
+      }
+      .profile-card .name {
+        animation-delay: 620ms;
+      }
+      .profile-card .meta {
+        animation-delay: 700ms;
+      }
+      .profile-card .icons {
+        animation-delay: 760ms;
+      }
 
-    @keyframes profileFadeIn{
-      0%{opacity:0;transform:translate(-50%,-46%) scale(.985);filter:blur(8px) saturate(90%)}
-      60%{opacity:1;transform:translate(-50%,-49%) scale(.995);filter:blur(3px) saturate(100%)}
-      100%{opacity:1;transform:translate(-50%,-50%) scale(1);filter:blur(0) saturate(120%)}
-    }
+      @keyframes profileFadeIn {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -46%) scale(0.985);
+          filter: blur(8px) saturate(90%);
+        }
+        60% {
+          opacity: 1;
+          transform: translate(-50%, -49%) scale(0.995);
+          filter: blur(3px) saturate(100%);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+          filter: blur(0) saturate(120%);
+        }
+      }
 
-    @keyframes childFade{
-      0%{opacity:0;transform:translateY(10px) scale(.995);filter:blur(6px)}
-      100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
-    }
-    .profile-card .avatar img{width:100%;height:100%;object-fit:cover;display:block}
-    .profile-card .name{font-size:46px;font-weight:800;line-height:1;margin:0;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,0.35)}
-    .profile-card .meta{font-size:16px;color:rgba(230,238,248,0.80);margin:0}
-    .profile-card .icons{display:flex;gap:12px;align-items:center}
-    .profile-card .icons a{position:relative;display:inline-flex;width:52px;height:52px;border-radius:10px;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);transition:transform .16s cubic-bezier(.2,.9,.28,1),filter .16s ease}
-    .profile-card .icons a img{width:22px;height:22px;display:block;filter:grayscale(80%) opacity(.95);transition:filter .12s ease,transform .12s ease}
-    .profile-card .icons a::before{
-      content:"";
-      position:absolute;inset:-8px;border-radius:12px;pointer-events:none;
-      background:radial-gradient(circle at 50% 40%, rgba(150,200,255,0.12), transparent 35%);
-      filter:blur(10px);
-      opacity:0;transition:opacity .18s ease;
-      z-index:-1;
-    }
-    .profile-card .icons a:hover::before{opacity:1}
-    .profile-card .icons a:hover{transform:translateY(-4px) scale(1.02);filter:brightness(1.06)}
-    @media (max-width:820px){
-      .profile-card{left:50%;top:54%;transform:translate(-50%,-50%);gap:10px;padding:14px}
-      .profile-card .avatar{width:140px;height:140px}
-      .profile-card .name{font-size:34px}
-    }
-    .ui{position:fixed;left:0;right:0;bottom:18px;display:flex;justify-content:center;z-index:5}
-    .btn{background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.12);padding:8px 14px;border-radius:6px;font-family:inherit;backdrop-filter:blur(6px)}
-    .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px)}
-  </style>
-</head>
-<body>
-  <video id="bgVid" class="bg-video" playsinline autoplay loop muted preload="auto">
-    <source src="videos/PlayStation 2 System Menu Ambience for 2 hours (online-video-cutter.com).mp4" type="video/mp4">
-    Votre navigateur ne supporte pas la vidéo HTML5.
-  </video>
+      @keyframes childFade {
+        0% {
+          opacity: 0;
+          transform: translateY(10px) scale(0.995);
+          filter: blur(6px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+      }
+      .profile-card .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .profile-card .name {
+        font-size: 46px;
+        font-weight: 800;
+        line-height: 1;
+        margin: 0;
+        color: #fff;
+        text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+      }
+      .profile-card .meta {
+        font-size: 16px;
+        color: rgba(230, 238, 248, 0.8);
+        margin: 0;
+      }
+      .profile-card .icons {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .profile-card .icons a {
+        position: relative;
+        display: inline-flex;
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        transition: transform 0.16s cubic-bezier(0.2, 0.9, 0.28, 1),
+          filter 0.16s ease;
+      }
+      .profile-card .icons a img {
+        width: 22px;
+        height: 22px;
+        display: block;
+        filter: grayscale(80%) opacity(0.95);
+        transition: filter 0.12s ease, transform 0.12s ease;
+      }
+      .profile-card .about-link {
+        margin-top: 10px;
+        font-size: 14px;
+        color: rgba(230, 238, 248, 0.8);
+      }
+      .profile-card .about-link a {
+        color: rgba(230, 238, 248, 0.9);
+        text-decoration: none;
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        transition: background 0.14s ease, transform 0.12s ease;
+      }
+      .profile-card .about-link a:hover {
+        background: rgba(255, 255, 255, 0.035);
+        transform: translateY(-2px);
+      }
+      /* About overlay (full screen) */
+      .about-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .about-overlay.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .about-overlay .backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(6, 8, 12, 0.7);
+        backdrop-filter: blur(6px) saturate(110%);
+        -webkit-backdrop-filter: blur(6px) saturate(110%);
+      }
+      .about-overlay .panel {
+        position: relative;
+        z-index: 2;
+        min-width: 320px;
+        max-width: 760px;
+        margin: 24px;
+        padding: 22px 26px;
+        border-radius: 12px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.02)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(8px) saturate(120%);
+        box-shadow: 0 18px 50px rgba(2, 6, 12, 0.6);
+        transform: translateY(8px) scale(0.995);
+        opacity: 0;
+        transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 0.36s;
+      }
+      .about-overlay.visible .panel {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      .about-overlay .panel h2 {
+        margin: 0 0 8px 0;
+        font-size: 22px;
+        color: rgba(230, 238, 248, 0.92);
+      }
+      .about-overlay .panel p {
+        color: rgba(230, 238, 248, 0.92);
+        line-height: 1.4;
+      }
+      .about-overlay .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        color: #fff;
+        padding: 6px 8px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .profile-card .icons a::before {
+        content: "";
+        position: absolute;
+        inset: -8px;
+        border-radius: 12px;
+        pointer-events: none;
+        background: radial-gradient(
+          circle at 50% 40%,
+          rgba(150, 200, 255, 0.12),
+          transparent 35%
+        );
+        filter: blur(10px);
+        opacity: 0;
+        transition: opacity 0.18s ease;
+        z-index: -1;
+      }
+      .profile-card .icons a:hover::before {
+        opacity: 1;
+      }
+      .profile-card .icons a:hover {
+        transform: translateY(-4px) scale(1.02);
+        filter: brightness(1.06);
+      }
+      @media (max-width: 820px) {
+        .profile-card {
+          left: 50%;
+          top: 54%;
+          transform: translate(-50%, -50%);
+          gap: 10px;
+          padding: 14px;
+        }
+        .profile-card .avatar {
+          width: 140px;
+          height: 140px;
+        }
+        .profile-card .name {
+          font-size: 34px;
+        }
+      }
+      .ui {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 18px;
+        display: flex;
+        justify-content: center;
+        z-index: 5;
+      }
+      .btn {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-family: inherit;
+        backdrop-filter: blur(6px);
+      }
+      .visually-hidden {
+        position: absolute !important;
+        height: 1px;
+        width: 1px;
+        overflow: hidden;
+        clip: rect(1px, 1px, 1px, 1px);
+      }
+    </style>
+  </head>
+  <body>
+    <video
+      id="bgVid"
+      class="bg-video"
+      playsinline
+      autoplay
+      loop
+      muted
+      preload="auto"
+      disablepictureinpicture
+    >
+      <source
+        src="videos/PlayStation 2 System Menu Ambience for 2 hours (online-video-cutter.com).mp4"
+        type="video/mp4"
+      />
+      Votre navigateur ne supporte pas la vidéo HTML5.
+    </video>
 
-  <!-- Profile card overlay (centered slightly to the right) -->
-  <section class="profile-card" aria-label="Profil">
-    <div class="avatar">
-      <img src="images/Nathan michel binaireV3 2.jpg" alt="Photo de profil" loading="eager">
+    <!-- Profile card overlay (centered slightly to the right) -->
+    <section class="profile-card" aria-label="Profil">
+      <div class="avatar">
+        <img
+          src="images/Nathan michel binaireV3 2.jpg"
+          alt="Photo de profil"
+          loading="eager"
+        />
+      </div>
+      <h1 class="name">Nathan Michel</h1>
+      <p class="meta">Développeur Web Full Stack</p>
+      <div class="icons" aria-hidden="false">
+        <a
+          href="https://github.com/Squid-Nayth"
+          title="GitHub"
+          aria-label="GitHub"
+          target="_blank"
+          rel="noopener"
+        >
+          <img src="icons/icons8-github-30.png" alt="GitHub" />
+        </a>
+        <a
+          href="https://www.linkedin.com/in/nathan-michel-nkombe-lasseni-474ab930a/"
+          title="LinkedIn"
+          aria-label="LinkedIn"
+          target="_blank"
+          rel="noopener"
+        >
+          <img src="icons/icons8-linkedin-30.png" alt="LinkedIn" />
+        </a>
+        <a
+          href="https://x.com/nayth_exe"
+          title="X"
+          aria-label="X"
+          target="_blank"
+          rel="noopener"
+        >
+          <img src="icons/icons8-x-50.png" alt="X" />
+        </a>
+      </div>
+      <p class="meta">Nathan Michel 2025 &copy;</p>
+      <p class="about-link">
+        <a href="#" target="_blank" rel="noopener">À propos de ce site web</a>
+      </p>
+    </section>
+
+    <!-- About overlay (hidden until user clicks the about link) -->
+    <div
+      class="about-overlay"
+      role="dialog"
+      aria-hidden="true"
+      aria-label="À propos de ce site"
+    >
+      <div class="backdrop" data-action="close"></div>
+      <div class="panel" role="document">
+        <button class="close-btn" aria-label="Fermer">✕</button>
+        <h2>À propos de ce site web</h2>
+        <p>
+          Ce site constitue le début d’un projet hommage dédié à la PlayStation
+          2. Davantage de contenu sera prochainement ajouté. Bien que sa mise en
+          ligne ait pris plus de temps que prévu, je souhaitais le publier avant
+          la fin de l’année 2025, en référence aux 25 ans de cette console
+          emblématique, sortie en mars 2000.
+        </p>
+
+        <p>
+          Ce projet a également pour objectif de reproduire, sur la partie
+          front-end, le menu de la PlayStation 2 visible lorsque la console est
+          en veille. Il s’agit d’une reconstitution visuelle et interactive
+          réalisée à titre personnel.
+        </p>
+
+        <p>
+          Si il vous interesse, n’hésitez pas à me contacter pour en discuter et à me suivre sur mes réseaux, vous pouvez aussi vous rendre sur mon GitHub pour mettre en favoris ce projet ou pour voir mes autres dépôts.
+
+        </p>
+
+        <p>
+          Vous trouverez sur ce site des informations générales sur la console,
+          son histoire, une sélection de jeux marquants ainsi qu’un aperçu de la
+          façon dont elle a été accueillie par le public et la presse.
+        </p>
+
+        <p>
+          Annoncée en 1999 et commercialisée en 2000, la PlayStation 2 demeure
+          la console de salon la plus vendue de tous les temps, avec plus de 155
+          millions d’unités écoulées et une ludothèque dépassant les 3 800
+          titres.
+        </p>
+
+
+        <p>
+          <i>Pour tous les amoureux de la PlayStation 2 - Nathan Michel </i>
+        </p>
+      </div>
     </div>
-    <h1 class="name">Kaneki Web</h1>
-    <p class="meta">15 years old, French & English developer.</p>
-    <div class="icons" aria-hidden="false">
-      <a href="#" title="GitHub" aria-label="GitHub" target="_blank" rel="noopener">
-        <img src="icons/icons8-github-30.png" alt="GitHub">
-      </a>
-      <a href="#" title="LinkedIn" aria-label="LinkedIn" target="_blank" rel="noopener">
-        <img src="icons/icons8-linkedin-30.png" alt="LinkedIn">
-      </a>
-      <a href="#" title="X" aria-label="X" target="_blank" rel="noopener">
-        <img src="icons/icons8-x-50.png" alt="X">
-      </a>
-    </div>
-  </section>
 
-  <script>
-    (function(){
-      const vid = document.getElementById('bgVid');
-      if (!vid) return;
+    <script>
+      (function () {
+        const vid = document.getElementById("bgVid");
+        if (!vid) return;
 
-      // Attempt to play the video with sound immediately.
-      // Note: some browsers may block unmuted autoplay; in that case
-      // the play() promise will reject and the video will remain paused.
-      try {
-        vid.muted = false;
-        vid.volume = 0.85;
-        const p = vid.play();
-        if (p && typeof p.then === 'function') {
-          p.catch((err) => {
-            // Autoplay blocked — keep muted autoplay as a graceful fallback
-            vid.muted = true;
-            vid.volume = 0;
-            vid.play().catch(()=>{});
+        // BroadcastChannel name shared with player
+        const playerChannelName = "ps2-player";
+        let bc = null;
+        let playerReady = false;
+        try {
+          bc = new BroadcastChannel(playerChannelName);
+        } catch (e) {
+          bc = null;
+        }
+        if (bc) {
+          bc.onmessage = function (ev) {
+            try {
+              if (ev && ev.data && ev.data.type === "player-ready")
+                playerReady = true;
+            } catch (e) {}
+          };
+        }
+        // Also listen for postMessage from player window (fallback if BroadcastChannel unavailable)
+        window.addEventListener(
+          "message",
+          function (ev) {
+            try {
+              if (
+                ev &&
+                ev.data &&
+                ev.data.type === "player-ready" &&
+                ev.origin === location.origin
+              ) {
+                playerReady = true;
+              }
+            } catch (e) {}
+          },
+          false
+        );
+
+        // SFX paths (relative to `public/`)
+        const sfxHover = "sounds/SCPH-10000_00021.wav";
+        const sfxClick = "sounds/SCPH-10000_00022.wav";
+        // Preload local audio instances (will be cloned to allow overlap)
+        const hoverAudio = new Audio(sfxHover);
+        hoverAudio.preload = "auto";
+        const clickAudio = new Audio(sfxClick);
+        clickAudio.preload = "auto";
+
+        // Attempt to play the page background video (try unmuted then fallback to muted)
+        try {
+          // Disable Picture-in-Picture for this page's background video
+          try {
+            if (typeof vid.disablePictureInPicture !== "undefined")
+              vid.disablePictureInPicture = true;
+          } catch (e) {}
+          // If the video somehow enters PiP, try to exit immediately to keep playback in-background only
+          try {
+            vid.addEventListener("enterpictureinpicture", function () {
+              if (document.exitPictureInPicture)
+                document.exitPictureInPicture().catch(() => {});
+            });
+          } catch (e) {}
+          vid.muted = false;
+          vid.volume = 0.85;
+          const p = vid.play();
+          if (p && typeof p.then === "function") {
+            p.catch(() => {
+              vid.muted = true;
+              vid.volume = 0;
+              vid.play().catch(() => {});
+            });
+          }
+        } catch (e) {
+          /* ignore */
+        }
+
+        // Helper: ensure a persistent player window exists (opened by a user gesture)
+        let playerWin = null;
+        function ensurePlayerWindow() {
+          if (playerWin && !playerWin.closed) return playerWin;
+          try {
+            playerWin = window.open(
+              "/player.html",
+              "ps2-player-window",
+              "noopener,noreferrer,width=480,height=160"
+            );
+          } catch (e) {
+            playerWin = null;
+          }
+          // re-create BroadcastChannel if needed
+          try {
+            if (!bc) bc = new BroadcastChannel(playerChannelName);
+          } catch (e) {}
+          return playerWin;
+        }
+
+        function sendToPlayer(message) {
+          if (bc) {
+            try {
+              bc.postMessage(message);
+            } catch (e) {}
+          }
+          if (playerWin && !playerWin.closed) {
+            try {
+              playerWin.postMessage(message, location.origin);
+            } catch (e) {}
+          }
+        }
+
+        // Play hover SFX: if persistent player is ready, play only there to avoid doubling.
+        function playHoverSfx() {
+          if (playerReady) {
+            sendToPlayer({
+              type: "play-sfx",
+              payload: { src: sfxHover, volume: 0.9 },
+            });
+          } else {
+            try {
+              const c = hoverAudio.cloneNode();
+              c.play().catch(() => {});
+            } catch (e) {}
+          }
+        }
+
+        // Play click SFX: always play locally for immediate feedback; send to player only if ready
+        function playClickSfx() {
+          try {
+            const c = clickAudio.cloneNode();
+            c.play().catch(() => {});
+          } catch (e) {}
+          if (playerReady)
+            sendToPlayer({
+              type: "play-sfx",
+              payload: { src: sfxClick, volume: 1 },
+            });
+        }
+
+        // Delegated handlers for icons
+        // Use pointerover + relatedTarget to ensure the hover SFX fires only when
+        // entering the anchor element itself (not when moving between the anchor
+        // and its child elements which would cause duplicate sounds).
+        document.addEventListener("pointerover", (e) => {
+          const a =
+            e.target.closest &&
+            e.target.closest(
+              ".profile-card .icons a, .profile-card .about-link a"
+            );
+          if (!a) return;
+          const from = e.relatedTarget;
+          // if we came from inside the same anchor, ignore (movement within)
+          try {
+            if (from && a.contains(from)) return;
+          } catch (err) {}
+          playHoverSfx();
+        });
+
+        // For touch devices, trigger only when the touched element belongs to an anchor
+        document.addEventListener(
+          "touchstart",
+          (e) => {
+            const a =
+              e.target.closest &&
+              e.target.closest(
+                ".profile-card .icons a, .profile-card .about-link a"
+              );
+            if (!a) return;
+            playHoverSfx();
+          },
+          { passive: true }
+        );
+
+        // Click: icons open their href; about-link opens the overlay instead
+        const aboutOverlay = document.querySelector(".about-overlay");
+        function openAbout() {
+          if (!aboutOverlay) return;
+          aboutOverlay.classList.add("visible");
+          aboutOverlay.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        }
+        function closeAbout() {
+          if (!aboutOverlay) return;
+          aboutOverlay.classList.remove("visible");
+          aboutOverlay.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+        }
+
+        document.addEventListener(
+          "click",
+          (e) => {
+            const a =
+              e.target.closest &&
+              e.target.closest(
+                ".profile-card .icons a, .profile-card .about-link a"
+              );
+            if (!a) return;
+            // If it's the about link, open the overlay instead of navigating
+            if (a.matches(".profile-card .about-link a")) {
+              e.preventDefault();
+              playClickSfx();
+              // open overlay after small delay so click SFX is heard
+              setTimeout(() => openAbout(), 140);
+              return;
+            }
+            // Otherwise it's an icon: play click SFX and open link in new tab
+            e.preventDefault();
+            playClickSfx();
+            const href = a.getAttribute("href") || a.dataset.href || "#";
+            setTimeout(() => {
+              window.open(href, "_blank", "noopener");
+            }, 140);
+          },
+          { capture: true }
+        );
+
+        // Close overlay on backdrop click or close button
+        if (aboutOverlay) {
+          aboutOverlay.addEventListener("click", (ev) => {
+            // close if clicking backdrop (data-action="close") or the overlay itself
+            if (
+              ev.target === aboutOverlay ||
+              ev.target.dataset.action === "close"
+            ) {
+              playClickSfx();
+              closeAbout();
+            }
+          });
+          const closeBtn = aboutOverlay.querySelector(".close-btn");
+          if (closeBtn)
+            closeBtn.addEventListener("click", (ev) => {
+              ev.preventDefault();
+              playClickSfx();
+              closeAbout();
+            });
+          // close on Escape
+          window.addEventListener("keydown", (ev) => {
+            if (
+              ev.key === "Escape" &&
+              aboutOverlay.classList.contains("visible")
+            ) {
+              playClickSfx();
+              closeAbout();
+            }
           });
         }
-      } catch (e) {
-        // ignore
-      }
-    })();
-  </script>
-</body>
+      })();
+    </script>
+  </body>
 </html>
