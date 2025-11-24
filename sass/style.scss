@@ -169,7 +169,7 @@ body {
     animation: copyright $duration linear infinite;
   }
   .branding {
-    font-size: 3rem;
+    font-size: 10rem;
     opacity: 0;
     animation: branding $duration cubic-bezier(0,.74,.46,1) infinite;
   }
@@ -315,5 +315,5 @@ body {
 }
 
 .is-small {
-  font-size: .3em;
+  font-size: .10em;
 }

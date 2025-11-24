@@ -1,8 +1,247 @@
 <link
   href="https://fonts.googleapis.com/css?family=Play&amp;display=swap"
   rel="stylesheet"
-/>
+/
+>
 <link href="css/style.css" rel="stylesheet" />
+
+<!-- Loader overlay: animation se joue ici, puis la page attend un clic pour continuer -->
+<div id="loader" role="dialog" aria-label="loader" aria-hidden="false">
+  <div id="loader-wrapper" aria-hidden="false">
+    <div id="wrapper">
+      <div id="triangle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 115">
+          <defs />
+          <path fill="#FFF" d="M64.5 0L129 115H0L64.5 0zm0 24.531L20.489 103h88.021L64.5 24.531z" /></svg>
+      </div>
+
+      <div id="circle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129">
+          <defs /> 
+          <path fill="#FFF" d="M64.5 0C100.122 0 129 28.878 129 64.5S100.122 129 64.5 129 0 100.122 0 64.5 28.878 0 64.5 0zm0 12C35.505 12 12 35.505 12 64.5S35.505 117 64.5 117 117 93.495 117 64.5 93.495 12 64.5 12z" /></svg>
+      </div>
+
+      <div id="cross">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 110">
+          <defs />
+          <path fill="#FFF" d="M101 .515L109.485 9l-46 46 46 46-8.485 8.485-46-46-46 46L.515 101l46-46-46-46L9 .515l46 46 46-46z" /></svg>
+      </div>
+
+      <div id="square">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 113 113">
+          <defs />
+          <path fill="#FFF" d="M113 0v113H0V0h113zm-12 12H12v89h89V12z" /></svg>
+      </div>
+    </div>
+      <div id="loader-instruction" class="reveal-on-scroll">Appuyez pour continuer</div>
+  </div>
+</div>
+
+    <!-- Audio for loader: placed outside the overlay so it is not removed when the loader is dismissed -->
+    <audio id="loader-audio" src="sounds/PS2 Startup Remake-[AudioTrimmer.com].mp3" preload="auto" aria-hidden="true" playsinline></audio>
+    <audio id="loader-audio-secondary" src="sounds/PlayStation-2-Logo-Sound-Effect.mp3" preload="auto" aria-hidden="true" playsinline></audio>
+
+<style>
+  /* Loader styles scoped to the overlay */
+  #loader {
+    position: fixed;
+    inset: 0;
+    background: #000; /* black background */
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #loader-wrapper { position: relative; }
+
+  /* reuse provided sizes */
+  #wrapper {
+    position: relative;
+    width: calc(48px * 2);
+    transform: translate(-50%, -50%);
+    margin: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+  }
+
+  #wrapper div {
+    width: 48px;
+    height: 48px;
+    float: left;
+    text-align: center;
+    line-height: 4.5;
+  }
+
+  #wrapper svg { width: 70%; }
+
+  /* Animations will be applied only when wrapper has "play" class */
+  #wrapper.play #triangle svg { animation: rotateAnimation 3s ease-in-out 1; }
+  #wrapper.play #square svg   { animation: rotateAnimation 3s 1s ease-in-out 1; }
+  #wrapper.play #circle svg   { animation: rotateAnimation 3s 0.5s ease-in-out 1; }
+  #wrapper.play #cross svg    { animation: rotateAnimation 3s 2.5s ease-in-out 1; }
+
+  @keyframes rotateAnimation {
+    0% { transform: rotate(0) scale(1); }
+    50% { transform: rotate(120deg) scale(0); }
+    70% { transform: rotate(-120deg) scale(0); }
+    100% { transform: rotate(0) scale(1); }
+  }
+
+  /* reveal-on-scroll inspired styles for the instruction */
+  #loader-instruction {
+    position: absolute;
+    bottom: -48px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.95);
+    font-family: "Play", sans-serif;
+    font-size: 12px;
+    pointer-events: none;
+  }
+
+  .reveal-on-scroll{opacity:0;transform:translateY(18px);transition:opacity .90s cubic-bezier(.2,.9,.2,1), transform .90s cubic-bezier(.2,.9,.2,1);will-change:opacity,transform}
+  .reveal-on-scroll.is-visible{opacity:1;transform:none}
+
+  /* fade-out transition when removing */
+  #loader.fade-out { opacity: 0; transition: opacity 300ms ease; }
+
+  /* While loader is active, pause page animations/transitions so they don't run
+     until the loader is dismissed. Only target the main page container `.screen` */
+  .loader-active .screen,
+  .loader-active .screen * {
+    animation-play-state: paused !important;
+    transition: none !important;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const wrapper = document.getElementById('wrapper');
+    const loader = document.getElementById('loader');
+    const instruction = document.getElementById('loader-instruction');
+    const audio = document.getElementById('loader-audio');
+    // Prevent interaction with page while loader visible and pause page animations
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.documentElement.classList.add('loader-active');
+
+    // Start animation by adding class that sets animation with finite iterations
+    // Use a tiny timeout to ensure styles are applied
+    setTimeout(function () { wrapper.classList.add('play'); }, 20);
+
+    // The #cross svg has the largest delay (2.5s) + duration (3s) = finishes last.
+    const crossSvg = document.querySelector('#cross svg');
+    let finished = false;
+    let played = false;
+    let loaderRemoved = false;
+
+    if (crossSvg) {
+      crossSvg.addEventListener('animationend', function () {
+        finished = true;
+        instruction.classList.add('is-visible');
+        console && console.log && console.log('Loader animation finished, ready to accept click');
+      }, { once: true });
+    } else {
+      // fallback timeout: 6s
+      setTimeout(function () { finished = true; instruction.classList.add('is-visible'); console && console.log && console.log('Fallback: loader finished'); }, 6000);
+    }
+
+    // Attach audio debug handlers (primary + secondary)
+    const audioSecondary = document.getElementById('loader-audio-secondary');
+    let playedSecondary = false;
+
+    if (audio) {
+      audio.addEventListener('playing', function () { console && console.log && console.log('Audio playing'); });
+      audio.addEventListener('play', function () { console && console.log && console.log('Audio play event'); });
+      audio.addEventListener('error', function (e) { console && console.error && console.error('Audio error', e); });
+      audio.addEventListener('ended', function () {
+        console && console.log && console.log('Audio ended');
+        // play secondary after 2.3s delay (ensure gesture-initiated play)
+        setTimeout(function () {
+          if (!audioSecondary) return;
+          if (playedSecondary) return;
+          playedSecondary = true;
+          try {
+            audioSecondary.currentTime = 0;
+            audioSecondary.volume = 0.95;
+            console && console.log && console.log('Attempting secondary audio.play()');
+            const p2 = audioSecondary.play();
+            if (p2 && typeof p2.then === 'function') {
+              p2.then(function () { console && console.log && console.log('Secondary play() promise resolved'); })
+                .catch(function (err) { console && console.error && console.error('Secondary play() promise rejected', err); });
+            }
+          } catch (e) {
+            console && console.error && console.error('audioSecondary.play() threw', e);
+          }
+        }, 500);
+      });
+      // ensure media is loaded
+      try { audio.load(); } catch (e) { /* ignore */ }
+    }
+
+    if (audioSecondary) {
+      audioSecondary.addEventListener('playing', function () { console && console.log && console.log('Secondary audio playing'); });
+      audioSecondary.addEventListener('play', function () { console && console.log && console.log('Secondary audio play event'); });
+      audioSecondary.addEventListener('error', function (e) { console && console.error && console.error('Secondary audio error', e); });
+      audioSecondary.addEventListener('ended', function () { console && console.log && console.log('Secondary audio ended'); });
+      try { audioSecondary.load(); } catch (e) { /* ignore */ }
+    }
+
+    function dismiss() {
+      if (!finished || loaderRemoved) return;
+      loaderRemoved = true;
+      // allow page scrolling again
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      // re-enable page animations
+      document.documentElement.classList.remove('loader-active');
+
+      // Start audio only once (user gesture) and ignore playback errors
+      if (audio && !played) {
+        played = true;
+        try {
+          audio.currentTime = 0;
+          audio.volume = 0.9;
+          console && console.log && console.log('Attempting audio.play()');
+          const p = audio.play();
+          if (p && typeof p.then === 'function') {
+            p.then(function () { console && console.log && console.log('play() promise resolved'); })
+             .catch(function (err) { console && console.error && console.error('play() promise rejected', err); });
+          }
+        } catch (e) {
+          console && console.error && console.error('audio.play() threw', e);
+        }
+      }
+
+      // fade and remove overlay
+      loader.classList.add('fade-out');
+      setTimeout(function () { loader.parentNode && loader.parentNode.removeChild(loader); }, 350);
+
+      // cleanup listeners
+      document.removeEventListener('click', onDocClick);
+      document.removeEventListener('keydown', onDocKey);
+    }
+
+    // wait for a click or Enter/Space after animation finished
+    function onDocClick() {
+      if (!finished) return;
+      dismiss();
+    }
+
+    function onDocKey(e) {
+      if (!finished) return;
+      if (e.key === 'Enter' || e.key === ' ') dismiss();
+    }
+
+    document.addEventListener('click', onDocClick);
+    document.addEventListener('keydown', onDocKey);
+  });
+</script>
+
 <div class="screen">
   <div class="content">
     <p class="copyright">Sony computer entertainment</p>
