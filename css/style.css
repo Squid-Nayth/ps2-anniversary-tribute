@@ -4,4 +4,24 @@
   box-sizing: border-box;
 }
 
+body {
+  display: flex;
+  background: black;
+  height: 100vh;
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+  font-family: "Play", sans-serif;
+}
+
+.screen {
+  width: 100%;
+  padding-top: 75%;
+  position: relative;
+  max-height: 100vh;
+  transform-style: preserve-3d;
+  perspective: 400px;
+  overflow: hidden;
+}
+
 /*# sourceMappingURL=style.css.map */
