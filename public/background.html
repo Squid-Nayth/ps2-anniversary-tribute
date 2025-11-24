@@ -355,6 +355,8 @@
         backdrop-filter: blur(6px);
         transition: transform 0.16s cubic-bezier(0.2,0.9,0.28,1), filter 0.16s ease, box-shadow 0.16s ease;
       }
+      .return-btn img { width: 18px; height: 18px; display: block; filter: invert(1) grayscale(80%) brightness(1.1); }
+      .return-btn .visually-hidden { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); }
       .return-btn::before {
         content: "";
         position: absolute;
@@ -373,7 +375,10 @@
   </head>
   <body>
     <!-- Bouton retour en haut à gauche -->
-    <button class="return-btn" aria-label="Retour vers l'accueil" title="Retour">←</button>
+    <button class="return-btn" aria-label="Retour vers l'accueil" title="Retour">
+      <img src="icons/reply-16.svg" alt="" aria-hidden="true" />
+      <span class="visually-hidden">Retour</span>
+    </button>
 
     <video
       id="bgVid"
