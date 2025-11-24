@@ -147,3 +147,37 @@ body {
   transform: rotateY(90deg);
   box-shadow: $cube-inner-shadow;
 }
+//content
+.screen .content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: white;
+  background: transparent;
+  z-index: 200;
+  animation: content $duration infinite;
+
+  .branding,
+  .copyright {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .copyright {
+    font-size: 1.5rem;
+    text-shadow: black 0px 0px 3px;
+    opacity: 0;
+    animation: copyright $duration linear infinite;
+  }
+
+  .branding {
+    font-size: 3rem;
+    opacity: 0;
+    animation: branding $duration cubic-bezier(0, 0.74, 0.46, 1) infinite;
+  }
+}
