@@ -181,3 +181,27 @@ body {
     animation: branding $duration cubic-bezier(0, 0.74, 0.46, 1) infinite;
   }
 }
+//animations
+@keyframes enter {
+  0% { transform: rotate(-20deg); }
+  60%, 100% { transform: rotate(100deg) scale(4); }
+}
+
+@keyframes copyright {
+  0%, 5% { opacity: 0; }
+  10%, 35% { opacity: 1; }
+  40%, 100% { opacity: 0; }
+}
+
+@keyframes content {
+  0% { background-color: black; }
+  5%, 43% { background: transparent; }
+  48%, 100% { background-color: black; }
+}
+
+@keyframes branding {
+  0%, 65% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(1.5); }
+  68%, 93% { opacity: 1; transform: translate3d(-50%, -50%, 0) scale(1); }
+  96%, 100% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(1.5); }
+}
+//
