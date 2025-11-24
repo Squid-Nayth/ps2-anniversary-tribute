@@ -116,6 +116,8 @@
     animation-play-state: paused !important;
     transition: none !important;
   }
+
+  /* (Removed .animations-stopped rules — animations will not be globally forced off) */
 </style>
 
 <script>
@@ -187,7 +189,11 @@
       audioSecondary.addEventListener('playing', function () { console && console.log && console.log('Secondary audio playing'); });
       audioSecondary.addEventListener('play', function () { console && console.log && console.log('Secondary audio play event'); });
       audioSecondary.addEventListener('error', function (e) { console && console.error && console.error('Secondary audio error', e); });
-      audioSecondary.addEventListener('ended', function () { console && console.log && console.log('Secondary audio ended'); });
+      audioSecondary.addEventListener('ended', function () {
+        console && console.log && console.log('Secondary audio ended');
+        // Wait 2 seconds after the second sound ends, then redirect to background page
+        setTimeout(function () { window.location.href = 'background.html'; }, 2000);
+      });
       try { audioSecondary.load(); } catch (e) { /* ignore */ }
     }
 

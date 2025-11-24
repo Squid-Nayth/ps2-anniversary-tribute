@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ambience — PlayStation 2</title>
+  <link href="css/style.css" rel="stylesheet" />
+  <style>
+    html,body{height:100%;margin:0;background:#000}
+    .bg-video{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+    .ui{position:fixed;left:0;right:0;bottom:18px;display:flex;justify-content:center;z-index:5}
+    .btn{background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.12);padding:8px 14px;border-radius:6px;font-family:inherit;backdrop-filter:blur(6px)}
+    .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px)}
+  </style>
+</head>
+<body>
+  <video id="bgVid" class="bg-video" playsinline autoplay loop muted preload="auto">
+    <source src="videos/PlayStation 2 System Menu Ambience for 2 hours (online-video-cutter.com).mp4" type="video/mp4">
+    Votre navigateur ne supporte pas la vidéo HTML5.
+  </video>
+
+  <div class="ui">
+    <button id="unmuteBtn" class="btn">Activer le son</button>
+  </div>
+
+  <script>
+    (function(){
+      const vid = document.getElementById('bgVid');
+      const btn = document.getElementById('unmuteBtn');
+
+      function ensurePlaying() {
+        if (!vid) return;
+        vid.muted = true;
+        const p = vid.play();
+        if (p && typeof p.then === 'function') {
+          p.catch(() => { /* ignore */ });
+        }
+      }
+
+      btn.addEventListener('click', function(){
+        if (!vid) return;
+        vid.muted = false;
+        vid.volume = 0.85;
+        const p = vid.play();
+        if (p && typeof p.then === 'function') p.catch(() => { /* ignore */ });
+        btn.style.display = 'none';
+      });
+
+      ensurePlaying();
+    })();
+  </script>
+</body>
+</html>
