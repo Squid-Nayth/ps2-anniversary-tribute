@@ -263,4 +263,8 @@ body {
   80% { opacity: 1; }
   100% { transform: translate(45vw, -20vw); opacity: 0; }
 }
-//
+//helpers
+.is-small {
+  font-size: 0.3em;
+}
+
