@@ -39,11 +39,14 @@
   // SFX paths (relative to `public/`)
   const sfxHover = "sounds/SCPH-10000_00021.wav";
   const sfxClick = "sounds/SCPH-10000_00022.wav";
+  const sfxClose = "sounds/SCPH-10000_00024.wav";
   // Preload local audio instances (will be cloned to allow overlap)
   const hoverAudio = new Audio(sfxHover);
   hoverAudio.preload = "auto";
   const clickAudio = new Audio(sfxClick);
   clickAudio.preload = "auto";
+  const closeAudio = new Audio(sfxClose);
+  closeAudio.preload = "auto";
 
   // Attempt to play the page background video (try unmuted then fallback to muted)
   try {
@@ -126,6 +129,24 @@
       sendToPlayer({ type: "play-sfx", payload: { src: sfxClick, volume: 1 } });
   }
 
+  // Play close SFX: used for closing overlays and for the return button
+  function playCloseSfx() {
+    // Return the cloned audio element so callers can wait for 'ended'.
+    try {
+      const c = closeAudio.cloneNode();
+      try { c.preload = 'auto'; } catch (e) {}
+      const p = c.play();
+      if (p && typeof p.then === 'function') p.catch(() => {});
+      if (playerReady)
+        sendToPlayer({ type: "play-sfx", payload: { src: sfxClose, volume: 1 } });
+      return c;
+    } catch (e) {
+      if (playerReady)
+        sendToPlayer({ type: "play-sfx", payload: { src: sfxClose, volume: 1 } });
+      return null;
+    }
+  }
+
   // Delegated handlers for icons
   // Use pointerover + relatedTarget to ensure the hover SFX fires only when
   // entering the anchor element itself (not when moving between the anchor
@@ -133,10 +154,12 @@
   document.addEventListener("pointerover", (e) => {
     const a =
       e.target.closest &&
-      e.target.closest(".profile-card .icons a, .profile-card .about-link a");
+      e.target.closest(
+        ".profile-card .icons a, .profile-card .about-link a, .return-btn"
+      );
     if (!a) return;
     const from = e.relatedTarget;
-    // if we came from inside the same anchor, ignore (movement within)
+    // if we came from inside the same anchor/element, ignore (movement within)
     try {
       if (from && a.contains(from)) return;
     } catch (err) {}
@@ -149,7 +172,9 @@
     (e) => {
       const a =
         e.target.closest &&
-        e.target.closest(".profile-card .icons a, .profile-card .about-link a");
+        e.target.closest(
+          ".profile-card .icons a, .profile-card .about-link a, .return-btn"
+        );
       if (!a) return;
       playHoverSfx();
     },
@@ -210,14 +235,37 @@
     if (closeBtn)
       closeBtn.addEventListener("click", (ev) => {
         ev.preventDefault();
-        playClickSfx();
+        playCloseSfx();
         closeAbout();
       });
     // close on Escape
     window.addEventListener("keydown", (ev) => {
       if (ev.key === "Escape" && aboutOverlay.classList.contains("visible")) {
-        playClickSfx();
+        playCloseSfx();
         closeAbout();
+      }
+    });
+  }
+
+  // Return button (top-left) — play close SFX then navigate back to index
+  const returnBtn = document.querySelector('.return-btn');
+  if (returnBtn) {
+    returnBtn.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const audioEl = playCloseSfx();
+      if (audioEl && typeof audioEl.addEventListener === 'function') {
+        // navigate after the audio ends; add a small buffer
+        audioEl.addEventListener('ended', function () {
+          setTimeout(() => { window.location.href = 'index.html'; }, 80);
+        });
+        // safety fallback: if audio doesn't end in reasonable time, navigate anyway
+        setTimeout(() => {
+          if (!audioEl.ended) window.location.href = 'index.html';
+        }, 5000);
+      } else {
+        // unknown duration: use preloaded duration if available, else fallback
+        const dur = (closeAudio && closeAudio.duration && !isNaN(closeAudio.duration) && closeAudio.duration > 0) ? (closeAudio.duration * 1000 + 80) : 400;
+        setTimeout(() => { window.location.href = 'index.html'; }, dur);
       }
     });
   }
