@@ -1,7 +1,16 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    max-width: 1200px;
-    }
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+
+$duration: 16s;
+//$duration: 0s;
+
+$grey: #616a92;
+$dark: #323641;
+$light: lighten($grey, 15%);
+
+$depth: 20vw;
+
+$cube-inner-shadow: inset 0 0 1vw rgba(cyan, 0.07);
