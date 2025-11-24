@@ -1,22 +1,18 @@
-//variables
-*,
-*:after,
-*:before {
+*, *:after, *:before {
   box-sizing: border-box;
 }
 
 $duration: 16s;
 //$duration: 0s;
 
-$grey: #616a92;
+$grey: #616A92;
 $dark: #323641;
 $light: lighten($grey, 15%);
 
 $depth: 20vw;
 
-$cube-inner-shadow: inset 0 0 1vw rgba(cyan, 0.07);
+$cube-inner-shadow: inset 0 0 1vw rgba(cyan, .07);
 
-//layout
 body {
   display: flex;
   background: black;
@@ -24,7 +20,7 @@ body {
   width: 100vw;
   align-items: center;
   justify-content: center;
-  font-family: "Play", sans-serif;
+  font-family: 'Play', sans-serif;
 }
 
 .screen {
@@ -36,10 +32,9 @@ body {
   perspective: 400px;
   overflow: hidden;
 }
-//Inner container et background
 .inner {
   .inner-bg {
-    background-image: url(https://res.cloudinary.com/dhpaysqxb/image/upload/v1568580561/nebula_prju57.png);
+    background-image:   url(https://res.cloudinary.com/dhpaysqxb/image/upload/v1568580561/nebula_prju57.png);
     background-size: cover;
     position: absolute;
     top: 0;
@@ -48,9 +43,9 @@ body {
     height: 100%;
     z-index: -1;
     transform: translateZ(-30vw) scale(1.4);
-    opacity: 0.8;
+    opacity: .8;
   }
-
+  
   position: absolute;
   top: 0;
   left: 0;
@@ -62,11 +57,12 @@ body {
   padding: 1%;
   padding-top: 10%;
   transform-style: preserve-3d;
-  animation: enter $duration cubic-bezier(1, 0, 0.4, 1) infinite;
+  //transform: rotate(-20deg);
+  animation: enter $duration cubic-bezier(1,0,.4,1)  infinite;
 }
-//boxes
+
 .box-container {
-  width: calc(100% / 14);
+  width: calc(100%/14);
   padding: 1%;
   position: relative;
   z-index: 100;
@@ -83,7 +79,7 @@ body {
 @for $i from 1 through 112 {
   .box-container:nth-child(#{$i}) .box {
     transform: translateZ(random(20)-20 + vw);
-    background-color: rgba(darken($light, random(55)), 0.95);
+    background-color: rgba(darken($light, random(55)), .95);
   }
 }
 
@@ -95,10 +91,10 @@ body {
 .box-container:nth-child(95) .box,
 .box-container:nth-child(94) .box,
 .box-container:nth-child(102) .box,
-.box-container:nth-child(101) .box {
+.box-container:nth-child(101) .box,{
   visibility: hidden;
 }
-//cube-faces
+
 .box .top,
 .box .bottom,
 .box .left,
@@ -109,45 +105,46 @@ body {
 }
 
 .box .top {
-  background: linear-gradient(to top, rgba(lighten($grey, 20%), 0.9), rgba(0, 0, 0, 0));
+  background: linear-gradient( to top, rgba(lighten($grey, 20%), .9), rgba(0,0,0,0));
   bottom: 100%;
   left: 0;
   height: $depth;
   transform-origin: 100% 100%;
   transform: rotateX(90deg);
   box-shadow: $cube-inner-shadow;
+  //opacity: 0;
 }
-
 .box .bottom {
-  background: linear-gradient(to bottom, rgba(lighten($grey, 2%), 0.9), rgba(0, 0, 0, 0));
+  background: linear-gradient(to bottom, rgba(lighten($grey, 2%), .9), rgba(0,0,0,0));
   top: 100%;
   left: 0;
   height: $depth;
   transform-origin: 0% 0%;
   transform: rotateX(-90deg);
-  box-shadow: $cube-inner-shadow;
+   box-shadow: $cube-inner-shadow;
+  //opacity: 0;
 }
-
 .box .left {
-  background: linear-gradient(to left, rgba(lighten($grey, 10%), 0.9), rgba(0, 0, 0, 0));
+  background: linear-gradient(to left, rgba(lighten($grey, 10%), .9), rgba(0,0,0,0));
   top: 0;
   right: 100%;
   width: $depth;
   transform-origin: 100% 100%;
   transform: rotateY(-90deg);
   box-shadow: $cube-inner-shadow;
+  //opacity: 0;
 }
-
 .box .right {
-  background: linear-gradient(to right, rgba(lighten($grey, 10%), 0.9), rgba(0, 0, 0, 0));
+  background: linear-gradient(to right, rgba(lighten($grey, 10%), .9), rgba(0,0,0,0));
   top: 0;
   left: 100%;
   width: $depth;
   transform-origin: 0% 0%;
   transform: rotateY(90deg);
   box-shadow: $cube-inner-shadow;
+  //opacity: 0;
 }
-//content
+
 .screen .content {
   position: absolute;
   top: 0;
@@ -159,52 +156,75 @@ body {
   background: transparent;
   z-index: 200;
   animation: content $duration infinite;
-
-  .branding,
-  .copyright {
+  .branding, .copyright {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
   }
-
   .copyright {
     font-size: 1.5rem;
     text-shadow: black 0px 0px 3px;
     opacity: 0;
     animation: copyright $duration linear infinite;
   }
-
   .branding {
     font-size: 3rem;
     opacity: 0;
-    animation: branding $duration cubic-bezier(0, 0.74, 0.46, 1) infinite;
+    animation: branding $duration cubic-bezier(0,.74,.46,1) infinite;
   }
 }
-//animations
+
 @keyframes enter {
-  0% { transform: rotate(-20deg); }
-  60%, 100% { transform: rotate(100deg) scale(4); }
+  0% {
+    transform: rotate(-20deg);
+  }
+  60%, 100% {
+    transform: rotate(100deg) scale(4);
+  }
 }
 
 @keyframes copyright {
-  0%, 5% { opacity: 0; }
-  10%, 35% { opacity: 1; }
-  40%, 100% { opacity: 0; }
+  0%,5% {
+    opacity: 0
+  }
+  10%, 35% {
+    opacity: 1;
+  }
+  40%, 100% {
+    opacity: 0;
+  }
 }
 
 @keyframes content {
-  0% { background-color: black; }
-  5%, 43% { background: transparent; }
-  48%, 100% { background-color: black; }
+  0% {
+    background-color: black;
+  }
+  5%, 43% {
+    background: transparent;
+  }
+  48%, 100% {
+    background-color: black;
+  }
 }
 
 @keyframes branding {
-  0%, 65% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(1.5); }
-  68%, 93% { opacity: 1; transform: translate3d(-50%, -50%, 0) scale(1); }
-  96%, 100% { opacity: 0; transform: translate3d(-50%, -50%, 0) scale(1.5); }
+  0%, 65% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(1.5);
+  }
+  
+  68%, 93% {
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(1);
+  }
+  
+  96%, 100% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(1.5);
+  }
 }
-//particles
+
 .particles {
   position: absolute;
   top: 0;
@@ -225,46 +245,75 @@ body {
 .particles span:nth-child(1) {
   left: 70%;
   top: 70%;
-  box-shadow: 0 0 10px 4px rgba(red, 0.8);
-  animation: particle-1 $duration/2 cubic-bezier(0, 0.74, 0.46, 1) infinite;
+  box-shadow: 0 0 10px 4px rgba(red, .8);
+  animation: particle-1 $duration/2 cubic-bezier(0,.74,.46,1) infinite;
 }
-
 .particles span:nth-child(2) {
   left: 70%;
   top: 50%;
-  box-shadow: 0 0 10px 4px rgba(green, 0.8);
-  animation: particle-2 $duration/2 cubic-bezier(0, 0.74, 0.46, 1) infinite;
+  box-shadow: 0 0 10px 4px rgba(green, .8);
+  animation: particle-2 $duration/2 cubic-bezier(0,.74,.46,1) infinite;
 }
 
 .particles span:nth-child(3) {
-  left: 15%;
+  left: 15;
   top: 75%;
-  box-shadow: 0 0 10px 4px rgba(blue, 0.8);
-  animation: particle-3 $duration/2 cubic-bezier(0, 0.74, 0.46, 1) infinite;
+  box-shadow: 0 0 10px 4px rgba(blue, .8);
+  animation: particle-3 $duration/2 cubic-bezier(0,.74,.46,1) infinite;
 }
 
-@keyframes particle-1 {
-  0% { opacity: 0; transform: none; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { transform: translate(-25vw, -20vw); opacity: 0; }
+
+@keyframes particle-1  {
+  0% {
+    opacity: 0;
+    transform: none;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-25vw, -20vw);
+    opacity: 0;
+  }
 }
 
-@keyframes particle-2 {
-  0% { opacity: 0; transform: none; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { transform: translate(-40vw, 10vw); opacity: 0; }
+@keyframes particle-2  {
+  0% {
+    opacity: 0;
+    transform: none;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-40vw, 10vw);
+    opacity: 0;
+  }
 }
 
-@keyframes particle-3 {
-  0% { opacity: 0; transform: none; }
-  20% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { transform: translate(45vw, -20vw); opacity: 0; }
+@keyframes particle-3  {
+  0% {
+    opacity: 0;
+    transform: none;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(45vw, -20vw);
+    opacity: 0;
+  }
 }
-//helpers
+
 .is-small {
-  font-size: 0.3em;
+  font-size: .3em;
 }
-
