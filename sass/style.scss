@@ -64,4 +64,38 @@ body {
   transform-style: preserve-3d;
   animation: enter $duration cubic-bezier(1, 0, 0.4, 1) infinite;
 }
+//boxes
+.box-container {
+  width: calc(100% / 14);
+  padding: 1%;
+  position: relative;
+  z-index: 100;
+  transform-style: preserve-3d;
+}
+
+.box {
+  width: 100%;
+  padding-top: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+@for $i from 1 through 112 {
+  .box-container:nth-child(#{$i}) .box {
+    transform: translateZ(random(20)-20 + vw);
+    background-color: rgba(darken($light, random(55)), 0.95);
+  }
+}
+
+.box-container:nth-child(41) .box,
+.box-container:nth-child(40) .box,
+.box-container:nth-child(47) .box,
+.box-container:nth-child(48) .box,
+.box-container:nth-child(46) .box,
+.box-container:nth-child(95) .box,
+.box-container:nth-child(94) .box,
+.box-container:nth-child(102) .box,
+.box-container:nth-child(101) .box {
+  visibility: hidden;
+}
 //
