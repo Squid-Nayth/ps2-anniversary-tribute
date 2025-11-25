@@ -28,6 +28,8 @@ La partie front-end est écrite en JavaScript vanilla sans framework front. Quel
 
 - Node.js (optionnel si vous n'utilisez pas les scripts de build de Sass et de Pug).
 
+### Installation 
+
 1. Cloner le dépôt :
 
 ```bash
