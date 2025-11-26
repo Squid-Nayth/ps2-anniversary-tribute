@@ -151,35 +151,31 @@
   // Use pointerover + relatedTarget to ensure the hover SFX fires only when
   // entering the anchor element itself (not when moving between the anchor
   // and its child elements which would cause duplicate sounds).
-  document.addEventListener("pointerover", (e) => {
-    const a =
-      e.target.closest &&
-      e.target.closest(
-        ".profile-card .icons a, .profile-card .about-link a, .return-btn"
-      );
-    if (!a) return;
-    const from = e.relatedTarget;
-    // if we came from inside the same anchor/element, ignore (movement within)
-    try {
-      if (from && a.contains(from)) return;
-    } catch (err) {}
-    playHoverSfx();
-  });
+  // Delegated hover handlers only on devices that support hover (desktop)
+  // Mobile/touch devices will NOT get hover sounds; they will only play click sounds.
+  let supportsHover = false;
+  try {
+    supportsHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  } catch (e) {
+    supportsHover = false;
+  }
 
-  // For touch devices, trigger only when the touched element belongs to an anchor
-  document.addEventListener(
-    "touchstart",
-    (e) => {
+  if (supportsHover) {
+    document.addEventListener("pointerover", (e) => {
       const a =
         e.target.closest &&
         e.target.closest(
           ".profile-card .icons a, .profile-card .about-link a, .return-btn"
         );
       if (!a) return;
+      const from = e.relatedTarget;
+      // if we came from inside the same anchor/element, ignore (movement within)
+      try {
+        if (from && a.contains(from)) return;
+      } catch (err) {}
       playHoverSfx();
-    },
-    { passive: true }
-  );
+    });
+  }
 
   // Click: icons open their href; about-link opens the overlay instead
   const aboutOverlay = document.querySelector(".about-overlay");

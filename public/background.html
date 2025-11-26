@@ -314,6 +314,35 @@
           font-size: 34px;
         }
       }
+      /* Small screens (mobile) tweaks */
+      @media (max-width: 480px) {
+        .profile-card {
+          left: 50%;
+          top: 56%;
+          transform: translate(-50%, -50%);
+          padding: 12px;
+          gap: 8px;
+          width: calc(100% - 32px);
+          max-width: 360px;
+        }
+        .profile-card .avatar {
+          width: 110px;
+          height: 110px;
+        }
+        .profile-card .name {
+          font-size: 28px;
+        }
+        .profile-card .icons a {
+          width: 44px;
+          height: 44px;
+        }
+        .profile-card .icons a img { width: 18px; height: 18px; }
+        .return-btn { padding: 6px 8px; border-radius: 8px; }
+        .return-btn img { width: 16px; height: 16px; }
+        .about-overlay .panel { margin: 12px; padding: 16px; max-width: calc(100% - 24px); }
+        /* reduce visual noise on small screens */
+        .box-container { opacity: 0.9; }
+      }
       .ui {
         position: fixed;
         left: 0;
