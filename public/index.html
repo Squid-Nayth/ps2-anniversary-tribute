@@ -56,8 +56,7 @@
   </div>
 </div>
 
-  </body>
-  </html>
+
     <!-- Audio for loader: placed outside the overlay so it is not removed when the loader is dismissed -->
     <audio id="loader-audio" src="sounds/PS2 Startup Remake-[AudioTrimmer.com].mp3" preload="auto" aria-hidden="true" playsinline></audio>
     <audio id="loader-audio-secondary" src="sounds/PlayStation-2-Logo-Sound-Effect.mp3" preload="auto" aria-hidden="true" playsinline></audio>
@@ -279,6 +278,19 @@
       // cleanup listeners
       document.removeEventListener('click', onDocClick);
       document.removeEventListener('keydown', onDocKey);
+
+      // FALLBACK: If for some reason the audio sequence doesn't complete, 
+      // force the menu to show after a reasonable time (intro length + buffer)
+      setTimeout(function() {
+        if (!document.body.classList.contains('ps2-menu-active')) {
+           console.log("Fallback: Forcing menu activation.");
+           document.body.classList.add('ps2-menu-active');
+           const menuAmbience = document.getElementById('menu-ambience');
+           if (menuAmbience && menuAmbience.paused) {
+               menuAmbience.play().catch(e => {});
+           }
+        }
+      }, 25000); 
     }
 
     // wait for a click or Enter/Space after animation finished
@@ -1225,7 +1237,25 @@
         </ul>
         <div class="footer-controls">
            <span><img src="icons/cross-icon.svg" onerror="this.style.display='none'" alt="X"> Enter</span>
-           <span><img src="icons/triangle-icon.svg" onerror="this.style.display='none'" alt="Triangle"> Version</span>
+           <span id="version-trigger" class="footer-item" data-action="version"><img src="icons/triangle-icon.svg" onerror="this.style.display='none'" alt="Triangle"> Version</span>
+        </div>
+      </div>
+
+      <!-- Version Information Menu -->
+      <div id="version-menu" class="version-menu-container">
+        <div class="version-content">
+          <h2 class="version-title">Version Information</h2>
+          <div class="version-grid">
+            <div class="version-row"><span class="label">Console</span><span class="value">SCPH-77001</span></div>
+            <div class="version-row"><span class="label">Browser</span><span class="value">1.40</span></div>
+            <div class="version-row"><span class="label">CD Player</span><span class="value">2.00</span></div>
+            <div class="version-row"><span class="label">PlayStation® Driver</span><span class="value">2.00</span></div>
+            <div class="version-row"><span class="label">DVD Player</span><span class="value">3.11U</span></div>
+            <div class="version-row"><span class="label">MAC Address</span><span class="value">76:6D:61:63:30:31</span></div>
+          </div>
+          <div class="back-control footer-item" data-action="back">
+             <img src="icons/circle-icon.svg" onerror="this.style.display='none'" alt="O"> Back
+          </div>
         </div>
       </div>
   </div>
@@ -1247,6 +1277,11 @@
       const menuAmbience = document.getElementById('menu-ambience');
       const menuAmbience2 = document.getElementById('menu-ambience-2');
       
+      const versionTrigger = document.getElementById('version-trigger');
+      const versionMenu = document.getElementById('version-menu');
+      const backButton = document.querySelector('.back-control');
+      const mainMenuContent = document.querySelector('.menu-text');
+
       // Chain Ambience 1 -> Ambience 2
       if (menuAmbience && menuAmbience2) {
           menuAmbience.addEventListener('ended', () => {
@@ -1256,16 +1291,10 @@
           });
       }
       
-      // ... (rest of logic)
-      // I need to locate where the main loader logic is. It was around line 147.
-      // I will edit that script block instead of this one if possible, OR I will just dispatch an event here?
-      // No, editing the main script block is cleaner.
-      
-      // ... (Menu interaction logic stays here) ...
-      // Handle Hover
+      // Handle Hover for menu items
       items.forEach(item => {
           item.addEventListener('mouseenter', () => {
-              if (document.body.classList.contains('ps2-menu-active')) {
+              if (document.body.classList.contains('ps2-menu-active') && !versionMenu.classList.contains('visible')) {
                   if (!item.classList.contains('active')) {
                       document.querySelector('.menu-item.active').classList.remove('active');
                       item.classList.add('active');
@@ -1279,6 +1308,30 @@
              console.log('Selected:', item.innerText);
           });
       });
+
+      // Handle Version Trigger
+      if (versionTrigger) {
+          versionTrigger.addEventListener('mouseenter', () => {
+              playSound(sfxHover);
+          });
+          versionTrigger.addEventListener('click', () => {
+              playSound(sfxConfirm);
+              if (versionMenu) versionMenu.classList.add('visible');
+              if (mainMenuContent) mainMenuContent.classList.add('hidden');
+          });
+      }
+
+      // Handle Back Button
+      if (backButton) {
+          backButton.addEventListener('mouseenter', () => {
+              playSound(sfxHover);
+          });
+          backButton.addEventListener('click', () => {
+              playSound(sfxConfirm);
+              if (versionMenu) versionMenu.classList.remove('visible');
+              if (mainMenuContent) mainMenuContent.classList.remove('hidden');
+          });
+      }
       
       function playSound(audio) {
           try {
@@ -1291,3 +1344,5 @@
       }
   });
 </script>
+</body>
+</html>

@@ -510,6 +510,91 @@ body.ps2-menu-active {
         filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
       }
     }
+
+    /* Hidden state for menu text when version is open */
+    &.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-50%) translateX(50px);
+    }
+  }
+
+  /* Version Information Menu */
+  .version-menu-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 48%;
+    /* Position to the right of the center */
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 600;
+
+    &.visible {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    .version-content {
+      text-align: left;
+
+      .version-title {
+        color: #d4a017;
+        /* PS2 Selection Yellow/Gold */
+        font-size: 1.6rem;
+        margin-bottom: 2.5rem;
+        text-shadow: 0 0 10px rgba(212, 160, 23, 0.3);
+      }
+
+      .version-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-bottom: 4rem;
+      }
+
+      .version-row {
+        display: flex;
+        font-size: 1.3rem;
+        color: #888;
+
+        .label {
+          width: 220px;
+        }
+
+        .value {
+          color: #bbb;
+        }
+      }
+
+      .back-control {
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.5rem;
+        color: #aaa;
+      }
+    }
+  }
+}
+
+.footer-item {
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    color: #fff !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
   }
 }
 
