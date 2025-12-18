@@ -186,6 +186,10 @@
       audio.addEventListener('error', function (e) { console && console.error && console.error('Audio error', e); });
       audio.addEventListener('ended', function () {
         console && console.log && console.log('Audio ended');
+        
+        // Start Menu Ambience moved to after secondary audio
+
+        
         // play secondary after 2.3s delay (ensure gesture-initiated play)
         setTimeout(function () {
           if (!audioSecondary) return;
@@ -215,8 +219,29 @@
       audioSecondary.addEventListener('error', function (e) { console && console.error && console.error('Secondary audio error', e); });
       audioSecondary.addEventListener('ended', function () {
         console && console.log && console.log('Secondary audio ended');
-        // Wait 2 seconds after the second sound ends, then redirect to background page
-        setTimeout(function () { window.location.href = 'background.html'; }, 2000);
+        // Wait 2 seconds after the second sound ends, then show the menu and play ambience
+        setTimeout(function () { 
+           // Start Menu Ambience synchronized with visual transition
+           const menuAmbience = document.getElementById('menu-ambience');
+           if (menuAmbience) {
+               try {
+                   menuAmbience.volume = 0; 
+                   const p = menuAmbience.play();
+                   if (p) {
+                      p.then(() => {
+                          let vol = 0;
+                          const fade = setInterval(() => {
+                              vol += 0.05;
+                              if (vol >= 1) { vol = 1; clearInterval(fade); }
+                              menuAmbience.volume = vol;
+                          }, 200);
+                      }).catch(e => console.error(e));
+                   }
+               } catch(e) {}
+           }
+           
+           document.body.classList.add('ps2-menu-active'); 
+        }, 2000);
       });
       try { audioSecondary.load(); } catch (e) { /* ignore */ }
     }
@@ -1177,4 +1202,92 @@
       </div>
     </div>
   </div>
+
+  <!-- PS2 Menu Container -->
+  <div id="ps2-menu" class="ps2-menu-container">
+      <div class="scene-3d">
+        <div class="stars-ring">
+           <!-- 7 Stars -->
+           <div class="orb"></div>
+           <div class="orb"></div>
+           <div class="orb"></div>
+           <div class="orb"></div>
+           <div class="orb"></div>
+           <div class="orb"></div>
+           <div class="orb"></div>
+
+        </div>
+      </div>
+      <div class="menu-text">
+        <ul>
+          <li class="menu-item active" data-action="browser">Browser</li>
+          <li class="menu-item" data-action="config">System Configuration</li>
+        </ul>
+        <div class="footer-controls">
+           <span><img src="icons/cross-icon.svg" onerror="this.style.display='none'" alt="X"> Enter</span>
+           <span><img src="icons/triangle-icon.svg" onerror="this.style.display='none'" alt="Triangle"> Version</span>
+        </div>
+      </div>
+  </div>
 </div>
+
+<!-- Audio SFX -->
+<audio id="sfx-hover" src="sounds/SCPH-10000_00021.wav" preload="auto"></audio>
+<audio id="sfx-confirm" src="sounds/SCPH-10000_00022.wav" preload="auto"></audio>
+<audio id="menu-ambience" src="sounds/ps2-menu-1.mp3" preload="auto"></audio>
+<audio id="menu-ambience-2" src="sounds/ps2-menu-2.mp3" loop preload="auto"></audio>
+
+<script>
+  // Menu Extension Logic
+  document.addEventListener('DOMContentLoaded', () => {
+      const menu = document.getElementById('ps2-menu');
+      const items = document.querySelectorAll('.menu-item');
+      const sfxHover = document.getElementById('sfx-hover');
+      const sfxConfirm = document.getElementById('sfx-confirm');
+      const menuAmbience = document.getElementById('menu-ambience');
+      const menuAmbience2 = document.getElementById('menu-ambience-2');
+      
+      // Chain Ambience 1 -> Ambience 2
+      if (menuAmbience && menuAmbience2) {
+          menuAmbience.addEventListener('ended', () => {
+             // Ensure volume is up (it was faded in)
+             menuAmbience2.volume = menuAmbience.volume; 
+             menuAmbience2.play().catch(e => console.error("Failed to play ambience 2", e));
+          });
+      }
+      
+      // ... (rest of logic)
+      // I need to locate where the main loader logic is. It was around line 147.
+      // I will edit that script block instead of this one if possible, OR I will just dispatch an event here?
+      // No, editing the main script block is cleaner.
+      
+      // ... (Menu interaction logic stays here) ...
+      // Handle Hover
+      items.forEach(item => {
+          item.addEventListener('mouseenter', () => {
+              if (document.body.classList.contains('ps2-menu-active')) {
+                  if (!item.classList.contains('active')) {
+                      document.querySelector('.menu-item.active').classList.remove('active');
+                      item.classList.add('active');
+                      playSound(sfxHover);
+                  }
+              }
+          });
+          
+          item.addEventListener('click', () => {
+             playSound(sfxConfirm);
+             console.log('Selected:', item.innerText);
+          });
+      });
+      
+      function playSound(audio) {
+          try {
+              if (audio) {
+                audio.currentTime = 0;
+                audio.volume = 0.8; 
+                audio.play().catch(() => {});
+              }
+          } catch(e) {}
+      }
+  });
+</script>
