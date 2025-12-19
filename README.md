@@ -67,9 +67,4 @@ Ou utiliser l'extension [LiveServer](https://marketplace.visualstudio.com/items?
 
 Les effets visuels et sonores présentés sur ce site sont la propriété de Sony Interactive Entertainment. Ce projet est réalisé à des fins non commerciales et n’est en aucun cas affilié à Sony.
 
----
-
-## Licence
-
-Ce projet est sous licence MIT.
 
