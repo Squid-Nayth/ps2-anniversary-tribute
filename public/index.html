@@ -54,7 +54,8 @@
           <path fill="#FFF" d="M113 0v113H0V0h113zm-12 12H12v89h89V12z" /></svg>
       </div>
     </div>
-      <div id="loader-instruction" class="reveal-on-scroll">Appuyez pour continuer</div>
+      <div id="loader-instruction" class="reveal-on-scroll">Press to continue</div>
+      <button id="mobile-audio-unlock" style="display: none; margin-top: 20px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 5px; cursor: pointer; font-family: 'Play', sans-serif;">Unlock Audio & Start</button>
   </div>
 </div>
 
@@ -296,6 +297,13 @@
     }
 
     // wait for a click or Enter/Space after animation finished
+    const unlockBtn = document.getElementById('mobile-audio-unlock');
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      unlockBtn.style.display = 'block';
+    }
+
     function onDocClick() {
       if (!finished) return;
       dismiss();
@@ -304,6 +312,15 @@
     function onDocKey(e) {
       if (!finished) return;
       if (e.key === 'Enter' || e.key === ' ') dismiss();
+    }
+
+    // Interaction to unlock audio context on mobile
+    if (unlockBtn) {
+      unlockBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!finished) return;
+        dismiss();
+      });
     }
 
     document.addEventListener('click', onDocClick);
