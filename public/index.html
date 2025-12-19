@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="fr">
 <head>
@@ -22,6 +21,9 @@
 
 </head>
 <body>
+
+<!-- Development Message -->
+<div id="dev-message" class="dev-message">In development</div>
 
 
 <!-- Loader overlay -->
@@ -231,7 +233,7 @@
                           let vol = 0;
                           const fade = setInterval(() => {
                               vol += 0.05;
-                              if (vol >= 1) { vol = 1; clearInterval(fade); }
+                              if (vol >= 0.5) { vol = 0.5; clearInterval(fade); }
                               menuAmbience.volume = vol;
                           }, 200);
                       }).catch(e => console.error(e));
@@ -1236,7 +1238,7 @@
           <li class="menu-item" data-action="config">System Configuration</li>
         </ul>
         <div class="footer-controls">
-           <span><img src="icons/cross-icon.svg" onerror="this.style.display='none'" alt="X"> Enter</span>
+           <span id="enter-control"><img src="icons/cross-icon.svg" onerror="this.style.display='none'" alt="X"> Enter</span>
            <span id="version-trigger" class="footer-item" data-action="version"><img src="icons/triangle-icon.svg" onerror="this.style.display='none'" alt="Triangle"> Version</span>
         </div>
       </div>
@@ -1252,18 +1254,72 @@
             <div class="version-row"><span class="label">PlayStation® Driver</span><span class="value">2.00</span></div>
             <div class="version-row"><span class="label">DVD Player</span><span class="value">3.11U</span></div>
             <div class="version-row"><span class="label">MAC Address</span><span class="value">76:6D:61:63:30:31</span></div>
+            <div class="version-row external-link" data-url="https://bio.site/zorrovian"><span class="label">Music</span><span class="value"><i>BIOS by Zorrovian</i></span></div>
+            <div class="version-row" data-target-menu="developer-menu"><span class="label">Developer</span><span class="value">Nayth.exe</span></div>
           </div>
-          <div class="back-control footer-item" data-action="back">
-             <img src="icons/circle-icon.svg" onerror="this.style.display='none'" alt="O"> Back
+          <div class="footer-row-container">
+            <div class="back-control footer-item" data-action="back">
+               <img src="icons/circle-icon.svg" onerror="this.style.display='none'" alt="O"> Back
+            </div>
+            <div class="about-trigger footer-item" data-action="open-about">
+               <img src="icons/square-icon.svg" onerror="this.style.display='none'" alt="Square"> About
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Developer Information Menu -->
+      <div id="developer-menu" class="version-menu-container">
+        <div class="version-content">
+          <h2 class="version-title">Developer Information</h2>
+          <div class="version-grid">
+            <div class="version-row external-link" data-url="https://x.com/nayth_exe">
+              <span class="label">Twitter</span><span class="value">Nayth.exe</span>
+            </div>
+            <div class="version-row external-link" data-url="https://www.linkedin.com/in/nathan-michel-nkombe-lasseni-474ab930a/">
+              <span class="label">Linkedin</span><span class="value">Nathan Michel</span>
+            </div>
+            <div class="version-row external-link" data-url="https://github.com/Squid-Nayth">
+              <span class="label">Github</span><span class="value">Squid-Nayth</span>
+            </div>
+          </div>
+          <div class="footer-row-container">
+            <div class="back-control footer-item" data-action="back-to-version">
+               <img src="icons/circle-icon.svg" onerror="this.style.display='none'" alt="O"> Back
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- About This Website Menu -->
+      <div id="about-page-menu" class="version-menu-container">
+        <div class="version-content" style="max-width: 700px; padding-right: 20px;">
+          <h2 class="version-title">About this website</h2>
+          <div class="about-text-container" style="color: #bbb; line-height: 1.5; font-size: 1.1rem; max-height: 60vh; overflow-y: auto; padding-right: 15px;">
+            <p style="margin-bottom: 1rem;">This website marks the beginning of a tribute project dedicated to the PlayStation 2. More content will be added soon. Although its release took longer than expected, I wanted to publish it before the end of 2025, in reference to the 25th anniversary of this iconic console, released in March 2000.</p>
+            <p style="margin-bottom: 1rem;">This project also aims to recreate, on the front-end side, the PlayStation 2 menu visible when the console is in standby mode. It is a personal visual and interactive re-creation.</p>
+            <p style="margin-bottom: 1rem;">If you are interested, feel free to contact me to discuss it and to follow me on my social networks. You can also visit my GitHub to star this project or to check out my other repositories.</p>
+            <p style="margin-bottom: 1rem;">On this website, you will find general information about the console, its history, a selection of iconic games, as well as an overview of how it was received by the public and the press.</p>
+            <p style="margin-bottom: 1rem;">Announced in 1999 and released in 2000, the PlayStation 2 remains the best-selling home console of all time, with over 155 million units sold and a library of more than 3,800 titles.</p>
+            <p style="margin-bottom: 1rem; color: #fff;">For all PlayStation 2 lovers – Nathan Michel</p>
+            <h3 style="color: #d4a017; font-size: 1.3rem; margin-top: 2rem; margin-bottom: 0.5rem;">Legal notice</h3>
+            <p style="font-size: 0.95rem; opacity: 0.8;">The visual and sound effects presented on this website are the property of Sony Interactive Entertainment. The music was produced by Zorrovian. This project is carried out for non-commercial purposes and is in no way affiliated with Sony or the PlayStation brand. △○ ⛌ □</p>
+          </div>
+          <div class="footer-row-container">
+            <div class="back-control footer-item" data-action="back-to-version">
+               <img src="icons/circle-icon.svg" onerror="this.style.display='none'" alt="O"> Back
+            </div>
+          </div>
+        </div>
+      </div>
+      
   </div>
 </div>
 
 <!-- Audio SFX -->
 <audio id="sfx-hover" src="sounds/SCPH-10000_00021.wav" preload="auto"></audio>
 <audio id="sfx-confirm" src="sounds/SCPH-10000_00022.wav" preload="auto"></audio>
+<audio id="sfx-back" src="sounds/SCPH-10000_00024.wav" preload="auto"></audio>
 <audio id="menu-ambience" src="sounds/ps2-menu-1.mp3" preload="auto"></audio>
 <audio id="menu-ambience-2" src="sounds/ps2-menu-2.mp3" loop preload="auto"></audio>
 
@@ -1274,6 +1330,7 @@
       const items = document.querySelectorAll('.menu-item');
       const sfxHover = document.getElementById('sfx-hover');
       const sfxConfirm = document.getElementById('sfx-confirm');
+      const sfxBack = document.getElementById('sfx-back');
       const menuAmbience = document.getElementById('menu-ambience');
       const menuAmbience2 = document.getElementById('menu-ambience-2');
       
@@ -1281,12 +1338,13 @@
       const versionMenu = document.getElementById('version-menu');
       const backButton = document.querySelector('.back-control');
       const mainMenuContent = document.querySelector('.menu-text');
+      const enterControl = document.getElementById('enter-control');
 
       // Chain Ambience 1 -> Ambience 2
       if (menuAmbience && menuAmbience2) {
           menuAmbience.addEventListener('ended', () => {
-             // Ensure volume is up (it was faded in)
-             menuAmbience2.volume = menuAmbience.volume; 
+             // Ensure volume is up (it was faded in), but keep it lower for ambience
+             menuAmbience2.volume = 0.5; 
              menuAmbience2.play().catch(e => console.error("Failed to play ambience 2", e));
           });
       }
@@ -1295,6 +1353,7 @@
       items.forEach(item => {
           item.addEventListener('mouseenter', () => {
               if (document.body.classList.contains('ps2-menu-active') && !versionMenu.classList.contains('visible')) {
+                  if (enterControl) enterControl.classList.add('glow-white');
                   if (!item.classList.contains('active')) {
                       document.querySelector('.menu-item.active').classList.remove('active');
                       item.classList.add('active');
@@ -1303,8 +1362,13 @@
               }
           });
           
+          item.addEventListener('mouseleave', () => {
+              if (enterControl) enterControl.classList.remove('glow-white');
+          });
+
           item.addEventListener('click', () => {
              playSound(sfxConfirm);
+             showDevMessage();
              console.log('Selected:', item.innerText);
           });
       });
@@ -1313,9 +1377,14 @@
       if (versionTrigger) {
           versionTrigger.addEventListener('mouseenter', () => {
               playSound(sfxHover);
+              if (enterControl) enterControl.classList.add('glow-white');
+          });
+          versionTrigger.addEventListener('mouseleave', () => {
+              if (enterControl) enterControl.classList.remove('glow-white');
           });
           versionTrigger.addEventListener('click', () => {
               playSound(sfxConfirm);
+              if (enterControl) enterControl.classList.remove('glow-white');
               if (versionMenu) versionMenu.classList.add('visible');
               if (mainMenuContent) mainMenuContent.classList.add('hidden');
           });
@@ -1327,10 +1396,76 @@
               playSound(sfxHover);
           });
           backButton.addEventListener('click', () => {
-              playSound(sfxConfirm);
+              playSound(sfxBack);
               if (versionMenu) versionMenu.classList.remove('visible');
               if (mainMenuContent) mainMenuContent.classList.remove('hidden');
           });
+      }
+
+      // Handle Version Table rows
+      const versionRows = document.querySelectorAll('.version-row');
+      const devMessage = document.getElementById('dev-message');
+      let devTimeout;
+
+      versionRows.forEach(row => {
+          row.addEventListener('mouseenter', () => playSound(sfxHover));
+          row.addEventListener('click', () => {
+              playSound(sfxConfirm);
+              if (row.hasAttribute('data-url')) {
+                  const url = row.getAttribute('data-url');
+                  setTimeout(() => {
+                      window.open(url, '_blank', 'noopener');
+                  }, 200);
+              } else if (row.hasAttribute('data-target-menu')) {
+                  const targetId = row.getAttribute('data-target-menu');
+                  const targetMenu = document.getElementById(targetId);
+                  if (targetMenu) {
+                      versionMenu.classList.remove('visible');
+                      targetMenu.classList.add('visible');
+                  }
+              } else {
+                  showDevMessage();
+              }
+          });
+      });
+
+      // Handle Navigation for Sub-menus Back Buttons
+      document.querySelectorAll('[data-action="back-to-version"]').forEach(btn => {
+          btn.addEventListener('mouseenter', () => playSound(sfxHover));
+          btn.addEventListener('click', () => {
+              playSound(sfxBack);
+              const parentMenu = btn.closest('.version-menu-container');
+              if (parentMenu) parentMenu.classList.remove('visible');
+              if (versionMenu) versionMenu.classList.add('visible');
+          });
+      });
+
+      // Handle About Menu Trigger
+      const aboutTrigger = document.querySelector('[data-action="open-about"]');
+      const aboutPageMenu = document.getElementById('about-page-menu');
+      if (aboutTrigger && aboutPageMenu) {
+          aboutTrigger.addEventListener('mouseenter', () => playSound(sfxHover));
+          aboutTrigger.addEventListener('click', () => {
+              playSound(sfxConfirm);
+              if (versionMenu) versionMenu.classList.remove('visible');
+              aboutPageMenu.classList.add('visible');
+          });
+      }
+
+
+      function showDevMessage() {
+          console.log('showDevMessage called');
+          if (!devMessage) {
+              console.error('devMessage element NOT found');
+              return;
+          }
+          console.log('devMessage element found, adding visible class');
+          clearTimeout(devTimeout);
+          devMessage.classList.add('visible');
+          devTimeout = setTimeout(() => {
+              console.log('Removing visible class');
+              devMessage.classList.remove('visible');
+          }, 1000);
       }
       
       function playSound(audio) {
@@ -1344,5 +1479,6 @@
       }
   });
 </script>
+
 </body>
 </html>

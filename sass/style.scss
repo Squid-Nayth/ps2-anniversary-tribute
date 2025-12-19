@@ -23,6 +23,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: 'Play', sans-serif;
+  margin: 0;
 }
 
 .screen {
@@ -300,13 +301,9 @@ body {
     opacity: 1;
   }
 
-  80% {
-    opacity: 1;
-  }
-
   100% {
-    transform: translate(-25vw, -20vw);
     opacity: 0;
+    transform: translate3d(-20vw, -20vh, 0);
   }
 }
 
@@ -316,17 +313,13 @@ body {
     transform: none;
   }
 
-  20% {
-    opacity: 1;
-  }
-
-  80% {
+  25% {
     opacity: 1;
   }
 
   100% {
-    transform: translate(-40vw, 10vw);
     opacity: 0;
+    transform: translate3d(20vw, -10vh, 0);
   }
 }
 
@@ -336,20 +329,15 @@ body {
     transform: none;
   }
 
-  20% {
-    opacity: 1;
-  }
-
-  80% {
+  15% {
     opacity: 1;
   }
 
   100% {
-    transform: translate(45vw, -20vw);
     opacity: 0;
+    transform: translate3d(-10vw, 30vh, 0);
   }
 }
-
 
 /* =========================================
    PS2 Menu Implementation
@@ -457,6 +445,7 @@ body.ps2-menu-active {
     /* Position to the right side */
     transform: translateY(-50%);
     text-align: left;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 
     ul {
       list-style: none;
@@ -565,6 +554,17 @@ body.ps2-menu-active {
         display: flex;
         font-size: 1.3rem;
         color: #888;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+          color: #fff;
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+
+          .value {
+            color: #fff;
+          }
+        }
 
         .label {
           width: 220px;
@@ -572,18 +572,81 @@ body.ps2-menu-active {
 
         .value {
           color: #bbb;
+          transition: color 0.3s;
         }
       }
 
-      .back-control {
-        margin-top: 2rem;
+      .back-control,
+      .about-trigger {
         display: flex;
         align-items: center;
         gap: 12px;
         font-size: 1.5rem;
         color: #aaa;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        img {
+          width: 24px;
+          height: 24px;
+        }
+
+        &:hover {
+          transform: none !important;
+        }
+      }
+
+      .footer-row-container {
+        margin-top: 2rem;
+        display: flex;
+        gap: 40px;
+      }
+
+      .about-text-container {
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 3px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba(0, 170, 255, 0.4);
+          border-radius: 3px;
+
+          &:hover {
+            background: rgba(0, 170, 255, 0.6);
+          }
+        }
       }
     }
+  }
+}
+
+
+/* Development Message - TOP LEVEL RULE */
+.dev-message {
+  position: fixed !important;
+  bottom: 10% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  color: #d4a017 !important;
+  /* PS2 Yellow */
+  font-size: 1.8rem !important;
+  font-weight: 800 !important;
+  opacity: 0;
+  pointer-events: none !important;
+  transition: opacity 0.2s ease-in-out !important;
+  text-shadow: 0 0 15px rgba(212, 160, 23, 0.8) !important;
+  z-index: 99999 !important;
+  text-align: center !important;
+  width: 100% !important;
+  background: transparent !important;
+
+  &.visible {
+    opacity: 1 !important;
   }
 }
 
@@ -591,10 +654,19 @@ body.ps2-menu-active {
   cursor: pointer;
   transition: all 0.3s;
 
-  &:hover {
+  &:hover,
+  &.glow-white {
     color: #fff !important;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-    transform: scale(1.05);
+  }
+}
+
+#enter-control {
+  transition: all 0.3s;
+
+  &.glow-white {
+    color: #fff !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
   }
 }
 
@@ -629,8 +701,6 @@ body.ps2-menu-active {
   100% {
     transform: rotateX(360deg) rotateY(720deg);
   }
-
-  /* Move faster and chaotic */
 }
 
 /* Responsive adjustments */
