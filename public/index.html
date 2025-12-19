@@ -55,7 +55,6 @@
       </div>
     </div>
       <div id="loader-instruction" class="reveal-on-scroll">Press to continue</div>
-      <button id="mobile-audio-unlock" style="display: none; margin-top: 20px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 5px; cursor: pointer; font-family: 'Play', sans-serif;">Unlock Audio & Start</button>
   </div>
 </div>
 
@@ -296,14 +295,6 @@
       }, 25000); 
     }
 
-    // wait for a click or Enter/Space after animation finished
-    const unlockBtn = document.getElementById('mobile-audio-unlock');
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      unlockBtn.style.display = 'block';
-    }
-
     function onDocClick() {
       if (!finished) return;
       dismiss();
@@ -312,15 +303,6 @@
     function onDocKey(e) {
       if (!finished) return;
       if (e.key === 'Enter' || e.key === ' ') dismiss();
-    }
-
-    // Interaction to unlock audio context on mobile
-    if (unlockBtn) {
-      unlockBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (!finished) return;
-        dismiss();
-      });
     }
 
     document.addEventListener('click', onDocClick);
@@ -1356,6 +1338,7 @@
       const backButton = document.querySelector('.back-control');
       const mainMenuContent = document.querySelector('.menu-text');
       const enterControl = document.getElementById('enter-control');
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
       // Chain Ambience 1 -> Ambience 2
       if (menuAmbience && menuAmbience2) {
@@ -1374,7 +1357,7 @@
                   if (!item.classList.contains('active')) {
                       document.querySelector('.menu-item.active').classList.remove('active');
                       item.classList.add('active');
-                      playSound(sfxHover);
+                      if (!isTouchDevice) playSound(sfxHover);
                   }
               }
           });
@@ -1393,7 +1376,7 @@
       // Handle Version Trigger
       if (versionTrigger) {
           versionTrigger.addEventListener('mouseenter', () => {
-              playSound(sfxHover);
+              if (!isTouchDevice) playSound(sfxHover);
               if (enterControl) enterControl.classList.add('glow-white');
           });
           versionTrigger.addEventListener('mouseleave', () => {
@@ -1410,7 +1393,7 @@
       // Handle Back Button
       if (backButton) {
           backButton.addEventListener('mouseenter', () => {
-              playSound(sfxHover);
+              if (!isTouchDevice) playSound(sfxHover);
           });
           backButton.addEventListener('click', () => {
               playSound(sfxBack);
@@ -1425,7 +1408,9 @@
       let devTimeout;
 
       versionRows.forEach(row => {
-          row.addEventListener('mouseenter', () => playSound(sfxHover));
+          row.addEventListener('mouseenter', () => {
+              if (!isTouchDevice) playSound(sfxHover);
+          });
           row.addEventListener('click', () => {
               playSound(sfxConfirm);
               if (row.hasAttribute('data-url')) {
@@ -1448,7 +1433,9 @@
 
       // Handle Navigation for Sub-menus Back Buttons
       document.querySelectorAll('[data-action="back-to-version"]').forEach(btn => {
-          btn.addEventListener('mouseenter', () => playSound(sfxHover));
+          btn.addEventListener('mouseenter', () => {
+              if (!isTouchDevice) playSound(sfxHover);
+          });
           btn.addEventListener('click', () => {
               playSound(sfxBack);
               const parentMenu = btn.closest('.version-menu-container');
@@ -1461,7 +1448,9 @@
       const aboutTrigger = document.querySelector('[data-action="open-about"]');
       const aboutPageMenu = document.getElementById('about-page-menu');
       if (aboutTrigger && aboutPageMenu) {
-          aboutTrigger.addEventListener('mouseenter', () => playSound(sfxHover));
+          aboutTrigger.addEventListener('mouseenter', () => {
+              if (!isTouchDevice) playSound(sfxHover);
+          });
           aboutTrigger.addEventListener('click', () => {
               playSound(sfxConfirm);
               if (versionMenu) versionMenu.classList.remove('visible');
