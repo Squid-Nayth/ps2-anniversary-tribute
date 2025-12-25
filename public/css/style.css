@@ -1360,3 +1360,8 @@ body.ps2-menu-active .screen {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+.is-small {
+  font-size: 0.2em;
+  vertical-align: baseline;
+}
